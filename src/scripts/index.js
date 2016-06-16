@@ -24,6 +24,7 @@ import CheckboxGroup from './CheckboxGroup';
 import Select, { Option } from './Select';
 import Picklist, { PicklistItem } from './Picklist';
 import DateInput from './DateInput';
+import TimeInput from './TimeInput';
 import Lookup from './Lookup';
 import FieldSet from './FieldSet';
 import Tree from './Tree';
@@ -42,6 +43,7 @@ export {
   Button, ButtonGroup,
   DropdownButton, DropdownMenu, DropdownMenuItem, MenuItem,
   Datepicker,
+  TimeInput,
   Tab, Tabs,
   Modal, ModalHeader, ModalContent, ModalFooter,
   SalesPath,

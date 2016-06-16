@@ -12,14 +12,13 @@ import ModalExamples from './ModalExamples';
 import NotificationExamples from './NotificationExamples';
 import TabsExamples from './TabsExamples';
 import TreeExamples from './TreeExamples';
+import AlexExamples from './AlexExamples';
 import BadgeExamples from './BadgeExamples';
 import BreadcrumbsExamples from './BreadcrumbsExamples';
 
 import { Router } from 'director';
 
 import { Grid, Row, Col, Tree, TreeNode } from 'react-lightning-design-system';
-
-
 const SECTIONS = {
   'badge': { label: 'Badge', klass: BadgeExamples },
   'breadcrumbs': { label: 'Breadcrumbs', klass: BreadcrumbsExamples },
@@ -35,6 +34,7 @@ const SECTIONS = {
   'notification': { label: 'Notification', klass: NotificationExamples },
   'tabs': { label: 'Tabs', klass: TabsExamples },
   'tree': { label: 'Tree', klass: TreeExamples },
+  'alex': { label: 'Alex', klass: AlexExamples },
 };
 
 export default class Root extends React.Component {

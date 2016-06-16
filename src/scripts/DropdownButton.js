@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom';
 import classnames from 'classnames';
 import Button from './Button';
 import DropdownMenu from './DropdownMenu';
+import Input from './Input';
+import Icon from './Icon';
 import { registerStyle } from './util';
 
 export default class DropdownButton extends React.Component {
@@ -123,6 +125,20 @@ export default class DropdownButton extends React.Component {
     }
 
     return button;
+  }
+  renderInput({ inputValue, ...props }) {
+    return (
+      <div className='slds-input-has-icon slds-input-has-icon--right'>
+        <Input ref='input' value={ inputValue } { ...props }
+          onKeyDown={ this.onInputKeyDown.bind(this) }
+          onChange={ this.onInputChange.bind(this) }
+          onBlur={ this.onInputBlur.bind(this) }
+        />
+        <Icon icon='clock' className='slds-input__icon' style={ { cursor: 'pointer' } }
+          onClick={ this.onTimeIconClick.bind(this) }
+        />
+      </div>
+    );
   }
 
   render() {

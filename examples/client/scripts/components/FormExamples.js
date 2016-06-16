@@ -4,6 +4,7 @@ import {
   CheckboxGroup, Checkbox, Select, Option,
   Picklist, PicklistItem,
   DateInput,
+  TimeInput,
   Lookup,
   FieldSet,
 } from 'react-lightning-design-system';
