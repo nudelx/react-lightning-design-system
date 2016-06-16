@@ -17,7 +17,7 @@ export default class TimeInput extends React.Component {
       id: `form-element-${uuid()}`,
       opened: (props.defaultOpened || false),
     };
-
+    this.onMenuItemClick = this.onMenuItemClick.bind(this);
     this._timeepoch = {
       10: 600,
       15: 900,
@@ -29,7 +29,7 @@ export default class TimeInput extends React.Component {
   }
 
   componentWillMount() {
-    this._options = this.buildTimeOptions(this.props.resolution, this.props.format);
+    this._options = this.buildTimeOptions(this.props.resolution, this.props.format, this.props.inputValue);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -42,6 +42,12 @@ export default class TimeInput extends React.Component {
     setTimeout(() => {
       this.showDatepicker();
     }, 10);
+  }
+
+  onMenuItemClick() {
+    debugger;
+    this.toggleTimemenu();
+    // this.setState({})
   }
 
   onInputKeyDown(e) {
@@ -148,40 +154,44 @@ export default class TimeInput extends React.Component {
     return !!targetEl;
   }
 
-  showDatepicker() {
-    let value = this.state.value;
-    if (typeof this.state.inputValue !== 'undefined') {
-      value = moment(this.state.inputValue, this.props.dateFormat);
-      if (value.isValid()) {
-        value = value.format('YYYY-MM-DD');
-      } else {
-        value = this.state.value;
-      }
-    }
-    this.setState({ opened: true, value });
-  }
+  // showDatepicker() {
+  //   let value = this.state.value;
+  //   if (typeof this.state.inputValue !== 'undefined') {
+  //     value = moment(this.state.inputValue, this.props.dateFormat);
+  //     if (value.isValid()) {
+  //       value = value.format('YYYY-MM-DD');
+  //     } else {
+  //       value = this.state.value;
+  //     }
+  //   }
+  //   this.setState({ opened: true, value });
+  // }
 
-  showTimemenu() {
+  toggleTimemenu() {
     setTimeout(() => {
       this.setState({ opened: !this.state.opened });
     }, 10);
   }
 
-  buildTimeOptions(resolution, format) { // min 10 - max 30 || default 30 min || format 12||24
+  buildTimeOptions(resolution, format, inputValue) { // min 10 - max 30 || default 30 min || format 12||24
     const step = (resolution in this._timeepoch) ? (resolution) : (30);
     let loops = (this._timeepoch.DAY / this._timeepoch[step]) + 1;
     let [hour, min, AMPM] = [0, 0, 'AM'];
-    let minToDisplay;
-    let hour12format;
+    let [minToDisplay, hour12format, hour24format, finalOption] = [0, 0, 0, 0];
+    let isSelected = 'none';
     const options = [];
+
     while (loops) {
       minToDisplay = (min === 0) ? ('00') : (min);
       hour12format = (hour > 12) ? (hour - 12) : (hour);
       hour12format = (hour === 0) ? (12) : (hour12format);
-      hour12format = (hour < 10 && format === 12) ? ('0' + hour) : (hour12format); // optional
-      options.push(<DropdownMenuItem key={loops}>
-        {(format === 12) ? (hour12format + ':' + minToDisplay + ' ' + AMPM) : (hour + ':' + minToDisplay)}
-      </DropdownMenuItem>);
+      hour12format = (hour12format < 10) ? ('0' + hour12format) : (hour12format); // optional
+      hour24format = (hour < 10) ? ('0' + hour) : (hour); // optional
+      finalOption = (format === 12)
+        ? (hour12format + ':' + minToDisplay + ' ' + AMPM)
+        : (hour24format + ':' + minToDisplay);
+      isSelected = (finalOption === inputValue) ? ('check') : ('none');
+      options.push(<DropdownMenuItem key={loops} onClick={this.onMenuItemClick} icon={isSelected}> { finalOption } </DropdownMenuItem>);
       min += step;
       if (min === 60) {
         hour += 1;
@@ -220,7 +230,7 @@ export default class TimeInput extends React.Component {
           onBlur={ this.onInputBlur.bind(this) }
         />
         <Icon icon='clock' className='slds-input__icon' style={ { cursor: 'pointer' } }
-          onClick={ this.showTimemenu.bind(this) }
+          onClick={ this.toggleTimemenu.bind(this) }
         />
       </div>
     );
@@ -254,12 +264,11 @@ export default class TimeInput extends React.Component {
     //   typeof dateValue !== 'undefined' && mvalue.isValid() ? mvalue.format(dateFormat) :
     //   null;
     // const dropdown = this.renderDropdown(dateValue);
-    const inputValue = '11';
     const formElemProps = { id, totalCols, cols, label, required, error };
     return (
       <FormElement { ...formElemProps }>
         <div className={ dropdownClassNames }>
-        { this.renderInput({ id, inputValue, ...props }) }
+        { this.renderInput({ id, ...props }) }
         <DropdownMenu align={ 'left' }
           size={ 'small' }
           ref='dropdown'
@@ -279,6 +288,8 @@ TimeInput.propTypes = {
   required: PropTypes.bool,
   format: PropTypes.number,
   resolution: PropTypes.number,
+  inputValue: PropTypes.string,
+  onMenuItemClick: PropTypes.func,
   error: PropTypes.oneOfType([
     PropTypes.bool,
     PropTypes.string,

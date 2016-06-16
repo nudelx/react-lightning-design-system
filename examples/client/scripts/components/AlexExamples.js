@@ -11,7 +11,7 @@ export default class AlexExamples extends React.Component {
   render() {
     return (
       <div>
-        <TimeInput label='alex' defaultValue='12AM' required={false} resolution={30} format={12} />
+        <TimeInput label='alex time picker 12 format' defaultValue='12AM' inputValue={'12:30 AM'} required={false} resolution={30} format={12} />
         <DateInput label='DateInput #2' defaultValue='2015-12-24' defaultOpened={false} required={false} error={''} />
         <DropdownButton label='Simple' menuAlign='left'>
             <MenuItem onClick={ this.click.bind(this) }>Menu Item #1</MenuItem>
