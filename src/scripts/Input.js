@@ -26,7 +26,6 @@ export default class Input extends React.Component {
     const inputClassNames = classnames(className, bare ? 'slds-input--bare' : 'slds-input');
     return (
       <input readOnly={readonly} className={ inputClassNames }
-        id={ id }
         type={ type }
         onChange={ this.onChange.bind(this) }
         { ...pprops }

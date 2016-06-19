@@ -7,7 +7,7 @@ import Input from './Input';
 import Icon from './Icon';
 // import Datepicker from './Datepicker';
 import DropdownMenu, { DropdownMenuItem } from './DropdownMenu';
-// import DropdownMenuItem from './DropdownMenu';
+import { registerStyle } from './util';
 
 export default class TimeInput extends React.Component {
   constructor(props) {
@@ -25,6 +25,16 @@ export default class TimeInput extends React.Component {
       30: 1800,
       DAY: 86400,
     };
+    registerStyle('no-hover-popup', [
+      [
+        '.slds-dropdown-trigger:hover .slds-dropdown--menu.react-slds-no-hover-popup',
+        '{ visibility: hidden; opacity: 0; }',
+      ],
+      [
+        '.slds-dropdown-trigger.react-slds-dropdown-opened .slds-dropdown--menu',
+        '{ visibility: visible !important; opacity: 1 !important; }',
+      ],
+    ]);
   }
 
   componentWillMount() {
@@ -39,7 +49,7 @@ export default class TimeInput extends React.Component {
 
   onMenuItemClick(event) {
     const value = event.target.textContent;
-    this.toggleTimemenu();
+    this.turnOfTimemenu();
     this.setState({ value, inputValue: value });
   }
 
@@ -56,6 +66,8 @@ export default class TimeInput extends React.Component {
       this.showDatepicker();
       e.preventDefault();
       e.stopPropagation();
+    } else if (e.keyCode === 27) { // esc
+      this.turnOfTimemenu();
     }
     if (this.props.onKeyDown) {
       this.props.onKeyDown(e);
@@ -71,6 +83,7 @@ export default class TimeInput extends React.Component {
   }
 
   onInputBlur() {
+    this.turnOfTimemenu();
     setTimeout(() => {
       if (!this.isFocusedInComponent()) {
         if (this.props.onBlur) {
@@ -92,9 +105,25 @@ export default class TimeInput extends React.Component {
     return !!targetEl;
   }
 
+  focusToTargetItemEl() {
+    if (this.state.opened) {
+      const inputEl = ReactDOM.findDOMNode(this.refs.input);
+      setTimeout(() => {
+        inputEl.focus();
+      }, 20);
+    }
+  }
+
   toggleTimemenu() {
     setTimeout(() => {
       this.setState({ opened: !this.state.opened });
+      this.focusToTargetItemEl();
+    }, 10);
+  }
+
+  turnOfTimemenu() {
+    setTimeout(() => {
+      this.setState({ opened: false });
     }, 10);
   }
 
@@ -169,8 +198,10 @@ export default class TimeInput extends React.Component {
         { this.renderInput({ id, ...props }) }
         <DropdownMenu align={ 'left' }
           size={ 'small' }
+          autoFocus
           ref='dropdown'
           maxHeight={maxHeight}
+          onKeyDown={this.onInputKeyDown.bind(this)}
         >
           {this._options}
         </DropdownMenu>
