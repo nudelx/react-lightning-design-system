@@ -133,7 +133,7 @@ export default class DropdownMenu extends React.Component {
   }
 
   render() {
-    const { className, align = 'left', size, header, nubbinTop, hoverPopup, children, ...props } = this.props;
+    const { className, align = 'left', size, header, nubbinTop, hoverPopup, children, maxHeight, ...props } = this.props;
     const dropdownMenuClassNames = classnames(
       className,
       'slds-dropdown',
@@ -154,7 +154,7 @@ export default class DropdownMenu extends React.Component {
           </div> :
           null
         }
-        <ul className='slds-dropdown__list' role='menu'>
+        <ul className={classnames('slds-dropdown__list', { [`slds-dropdown--length-${maxHeight}`]: maxHeight })} role='menu'>
           { React.Children.map(children, this.renderMenuItem.bind(this)) }
         </ul>
       </div>
@@ -176,4 +176,5 @@ DropdownMenu.propTypes = {
   onBlur: PropTypes.func,
   onFocus: PropTypes.func,
   children: PropTypes.node,
+  maxHeight: PropTypes.number,
 };
